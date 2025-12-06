@@ -26,7 +26,7 @@ REM ===================================
 for /d %%F in ("%TARGET%\*") do (
     echo --- Subfolder: %%~nxF ---
 
-    uv run python jpgs_to_pdf_b5.py "%%F"
+    uv run python jpgs_to_pdf_b4_2in1.py "%%F"
 
     echo.
 )

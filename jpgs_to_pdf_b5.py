@@ -2,8 +2,12 @@ import os
 import sys
 from PIL import Image, ImageOps
 
-# === B5サイズ（mm）を300dpiでピクセル換算 ===
-DPI = 300
+# jpgs_to_pdf_b5.py
+# ディレクトリ内のJPG画像を読み込み、EXIFの回転情報を考慮してB5サイズに拡大・中央トリミングし、1つのPDFにまとめる。
+# pdfファイルの出力先は元ディレクトリの親ディレクトリ。
+
+# === B5サイズ(mm)を400dpiでピクセル換算 ===
+DPI = 400
 B5_WIDTH_PX = int(182 / 25.4 * DPI)
 B5_HEIGHT_PX = int(257 / 25.4 * DPI)
 B5_SIZE = (B5_WIDTH_PX, B5_HEIGHT_PX)
@@ -16,7 +20,7 @@ def open_with_orientation(path: str) -> Image.Image:
 
 def fill_to_b5(image: Image.Image) -> Image.Image:
     """
-    画像をB5サイズに合わせて拡大・中央トリミングする（余白なし）
+    画像をB5サイズに合わせて拡大・中央トリミングする(余白なし)
     """
     img = image.convert("RGB")
     img_ratio = img.width / img.height
@@ -57,13 +61,13 @@ def jpgs_to_pdf(input_dir):
 
     dir_name = os.path.basename(os.path.normpath(input_dir))
     parent_dir = os.path.dirname(os.path.normpath(input_dir))
-    output_pdf = os.path.join(parent_dir, f"{dir_name}_b5.pdf")
+    output_pdf = os.path.join(parent_dir, f"{dir_name}.pdf")
 
     first_image = fill_to_b5(open_with_orientation(os.path.join(input_dir, files[0])))
     images = [fill_to_b5(open_with_orientation(os.path.join(input_dir, f))) for f in files[1:]]
 
     first_image.save(output_pdf, save_all=True, append_images=images, resolution=DPI)
-    print(f"PDFを作成しました（B5・{DPI}dpi・EXIF補正・余白なし）: {output_pdf}")
+    print(f"PDFを作成しました: {output_pdf}")
 
 
 if __name__ == "__main__":
